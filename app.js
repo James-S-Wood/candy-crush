@@ -14,6 +14,9 @@ const candyColors = [
     'url(images/blue-candy.png)'
   ]
 
+// Sound effect for crushing candies
+const crushSound = new Audio('sounds/crush.mp3');
+
 //create your board
 function createBoard() {
   for (let i = 0; i < width*width; i++) {
@@ -95,6 +98,15 @@ function moveIntoSquareBelow() {
     }
 }
 
+function processMatch(indices, points) {
+  score += points;
+  scoreDisplay.innerHTML = score;
+  crushSound.play();
+  indices.forEach(index => {
+    squares[index].style.backgroundImage = '';
+  });
+}
+
 
 ///Checking for Matches
 //for row of Four
@@ -108,11 +120,7 @@ function moveIntoSquareBelow() {
       if (notValid.includes(i)) continue
 
       if(rowOfFour.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
-        score += 4
-        scoreDisplay.innerHTML = score
-        rowOfFour.forEach(index => {
-        squares[index].style.backgroundImage = ''
-        })
+        processMatch(rowOfFour, 4);
       }
     }
   }
@@ -126,11 +134,7 @@ function moveIntoSquareBelow() {
       const isBlank = squares[i].style.backgroundImage === ''
 
       if(columnOfFour.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
-        score += 4
-        scoreDisplay.innerHTML = score
-        columnOfFour.forEach(index => {
-        squares[index].style.backgroundImage = ''
-        })
+        processMatch(columnOfFour, 4);
       }
     }
   }
@@ -147,11 +151,7 @@ checkColumnForFour()
       if (notValid.includes(i)) continue
 
       if(rowOfThree.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
-        score += 3
-        scoreDisplay.innerHTML = score
-        rowOfThree.forEach(index => {
-        squares[index].style.backgroundImage = ''
-        })
+        processMatch(rowOfThree, 3);
       }
     }
   }
@@ -165,11 +165,7 @@ checkColumnForFour()
       const isBlank = squares[i].style.backgroundImage === ''
 
       if(columnOfThree.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
-        score += 3
-        scoreDisplay.innerHTML = score
-        columnOfThree.forEach(index => {
-        squares[index].style.backgroundImage = ''
-        })
+        processMatch(columnOfThree, 3);
       }
     }
   }
